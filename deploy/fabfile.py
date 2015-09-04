@@ -540,8 +540,10 @@ def run_jenkins_container(role='local'):
     The same that run: $ fab cju
     """
     set_env(role)
-    # Create aegir dir and Setup ssh keys to use fabric
-    fab_run(role, 'docker run -p 8080:8080 -p 50000:50000 --name jenkins_container jenkins')
+    # Change permision in jenkins_home dir and run the container using the official image
+    fab_run(role, 'sudo chmod -R 777 {}/jenkins_home'.format(WORKSPACE))
+    fab_run(role, 'docker run -p 8080:8080 -p 50000:50000 -v {}/jenkins_home:/var/jenkins_home -h {} --name jenkins_container '
+                  'jenkins'.format(WORKSPACE, JENKINS_HOSTNAME))
 
 
 @task(alias='srjc')
@@ -554,6 +556,19 @@ def stop_remove_jenkins_container(role='local'):
     set_env(role)
     # Create aegir dir and Setup ssh keys to use fabric
     fab_run(role, 'docker stop jenkins_container && docker rm jenkins_container')
+
+
+@task(alias='ajh')
+@roles('local')
+def add_jenkins_host(role='local'):
+    """
+    Create the Jenkins user
+    The same that run: $ fab cju
+    """
+    ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" jenkins_container'.format(PROJECT_NAME),
+            capture=True)
+    fab_update_hosts(ip, JENKINS_HOSTNAME)
+    print(green('Now you can visit your the site at http://{}:8080'.format(JENKINS_HOSTNAME)))
 
 
 @task(alias='ds')

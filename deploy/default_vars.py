@@ -17,30 +17,29 @@
 
 from os import path
 
-# The Apache user
-APACHE = 'www-data'
-
-# The Aegir user
-AEGIR = 'aegir'
-# The Genkins user
-JENKINS = 'jenkins'
-
 # Variables to use at your local machine
 LOCAL_WORKSPACE = path.join(path.dirname(__file__), path.pardir)
 
+#=================#
+# The Apache user #
+#=================#
+APACHE = 'www-data'
 
-# Variables to use inside the docker container
-DOCKER_WORKSPACE = "/opt/"
-DOCKER_PORT_TO_BIND = 8431
+#===================#
+# Genkins variables #
+#===================#
+JENKINS = 'jenkins'
+JENKINS_HOSTNAME = 'local.jenkins.sfl'
 
-# Aegir hostname
+#=================#
+# Aegir variables #
+#=================#
+AEGIR = 'aegir'
 AEGIR_HOSTNAME = 'local.aegir.sfl'
-
-# Projects variables
 PROJECT_NAME = 'aegir'
 PROJECT_TYPE = 'drupal'
-
-# Database variables
+DOCKER_WORKSPACE = "/opt/"
+DOCKER_PORT_TO_BIND = 8431
 ROOT_PASS = ''
 DB_USER = 'dev'
 DB_PASS = 'dev'
