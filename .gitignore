@@ -1,0 +1,3 @@
+deploy/id_rsa*
+deploy/*.pyc
+.idea
