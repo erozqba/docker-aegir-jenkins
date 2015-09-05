@@ -542,7 +542,7 @@ def run_jenkins_container(role='local'):
     set_env(role)
     # Change permision in jenkins_home dir and run the container using the official image
     fab_run(role, 'sudo chmod -R 777 {}/jenkins_home'.format(WORKSPACE))
-    fab_run(role, 'docker run -p 8080:8080 -p 50000:50000 -v {}/jenkins_home:/var/jenkins_home -h {} --name jenkins_container '
+    fab_run(role, 'docker run -p 50000:50000 -v {}/jenkins_home:/var/jenkins_home -h {} --name jenkins_container '
                   'jenkins'.format(WORKSPACE, JENKINS_HOSTNAME))
 
 

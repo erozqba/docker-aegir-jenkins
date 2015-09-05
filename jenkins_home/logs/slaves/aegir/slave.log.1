@@ -1,0 +1,27 @@
+[09/04/15 22:58:42] [SSH] Opening SSH connection to 172.17.0.2:22.
+Connection refused
+SSH Connection failed with IOException: "Connection refused".
+java.io.IOException: There was a problem while connecting to 172.17.0.2:22
+	at com.trilead.ssh2.Connection.connect(Connection.java:818)
+	at com.trilead.ssh2.Connection.connect(Connection.java:687)
+	at com.trilead.ssh2.Connection.connect(Connection.java:587)
+	at hudson.plugins.sshslaves.SSHLauncher.openConnection(SSHLauncher.java:1146)
+	at hudson.plugins.sshslaves.SSHLauncher$2.call(SSHLauncher.java:701)
+	at hudson.plugins.sshslaves.SSHLauncher$2.call(SSHLauncher.java:696)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.net.ConnectException: Connection refused
+	at java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+	at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+	at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+	at java.net.Socket.connect(Socket.java:589)
+	at com.trilead.ssh2.transport.TransportManager.establishConnection(TransportManager.java:354)
+	at com.trilead.ssh2.transport.TransportManager.initialize(TransportManager.java:467)
+	at com.trilead.ssh2.Connection.connect(Connection.java:758)
+	... 9 more
+[09/04/15 22:58:42] Launch failed - cleaning up connection
+[09/04/15 22:58:42] [SSH] Connection closed.

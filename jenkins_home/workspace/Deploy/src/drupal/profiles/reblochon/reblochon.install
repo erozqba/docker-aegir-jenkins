@@ -1,0 +1,149 @@
+<?php
+
+/**
+ * @file  reblochon.install
+ * Main installation file for Reblochon profile
+ */
+
+/**
+ * Remove language prefix for French (after it has been set automatically by site-install)
+ */
+function reblochon_install_tasks(&$install_state) {
+  if ($install_state['active_task'] == 'install_import_locales_remaining') {
+    db_update('languages')->fields(array('prefix' => ''))->condition('language', 'fr')->execute();
+
+    // Set default timezone & disable configurable timezones
+    variable_set('date_default_timezone', 'Europe/Paris');
+    variable_set('configurable_timezones', 0);
+  }
+}
+
+/**
+ * Implements hook_install().
+ */
+function reblochon_install() {
+
+  // Default 'Basic page' to not be promoted and have comments disabled.
+  variable_set('node_options_page', array('status'));
+  variable_set('comment_page', 0);
+  // Don't display date and author information for 'Basic page' nodes by default.
+  variable_set('node_submitted_page', FALSE);
+
+  // Create a default role for site administrators, with all available permissions assigned.
+  $role = new stdClass();
+  $role->name = 'Administrateur';
+  $role->weight = 2;
+  user_role_save($role);
+  user_role_grant_permissions($role->rid, array_keys(module_invoke_all('permission')));
+  // Set this as the administrator role.
+  variable_set('user_admin_role', $role->rid);
+
+  // Assign user 1 the 'administrator' role.
+  db_insert('users_roles')->fields(array('uid' => 1, 'rid' => $role->rid))->execute();
+
+  // Create the Éditeur role
+  $role = new stdClass();
+  $role->name = 'Éditeur';
+  $role->weight = 3;
+  user_role_save($role);
+
+
+  // Allow only administrator to create users.
+  variable_set('user_register', USER_REGISTER_ADMINISTRATORS_ONLY);
+
+  // Enable default permissions for system roles.
+  user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content'));
+  user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content'));
+
+  // Global menus creation/update
+  set_global_menus_configuration();
+
+  // Set appareance settings
+  theme_enable(array('adminimal'));
+  // theme_enable(array('adminimal', 'dauph_in'));
+  variable_set('admin_theme', 'adminimal');
+  variable_set('node_admin_theme', 1);
+  // variable_set('theme_default', 'dauph_in');
+
+  // Site language
+  $language_negociation_language = array(
+    'locale-url' => array(
+      'callbacks' => array(
+        'language' => 'locale_language_from_url',
+        'switcher' => 'locale_language_switcher_url',
+        'url_rewrite' => 'locale_language_url_rewrite_url',
+      ),
+      'file' => 'includes/locale.inc',
+    ),
+    'language-default' => array(
+      'callbacks' => array(
+        'language' => 'language_from_default',
+      ),
+    ),
+  );
+  variable_set('language_negotiation_language', $language_negociation_language);
+  variable_set('site_default_country', 'FR');
+  variable_set('date_first_day', '1');
+
+  // Set prefix for English
+  db_update('languages')->fields(array('prefix' => 'en'))->condition('language', 'en')->execute();
+
+  // Path configuration
+  variable_set('pathauto_update_action', 1);
+  variable_set('pathauto_transliterate', 1);
+  variable_set('pathauto_reduce_ascii', 1);
+
+  // jQuery Update configuration
+  set_jquery_update_conf();
+
+  // Image quality
+  variable_set('image_jpeg_quality', 90);
+}
+
+
+/**
+ * Set global menus (main and social) and make them translatable
+ */
+function set_global_menus_configuration() {
+
+  // Menus list
+  $menus = array(
+
+    // main menu (alter cause already exist)
+    'main-menu' => array(
+      'language' => LANGUAGE_NONE,
+      'i18n_mode' => 5,
+    ),
+  );
+
+  // Merge menus in Drupal table
+  // create, or update if exist (db_merge is magic)
+  foreach ($menus as $menu_name => $menu) {
+    db_merge('menu_custom')
+      ->key(array('menu_name' => $menu_name))
+      ->fields($menu)
+      ->execute();
+  }
+
+  // Clear menus cache and update the menu router information.
+  menu_cache_clear_all();
+  menu_rebuild();
+}
+
+/**
+ * Configure jQuery Update module
+ */
+function set_jquery_update_conf() {
+
+  // Front theme (default) version
+  variable_set('jquery_update_jquery_version', '1.8');
+
+  // Admin theme version
+  variable_set('jquery_update_jquery_admin_version', '');
+
+  // Which CDN should be use
+  variable_set('jquery_update_jquery_cdn', 'none');
+
+  // jQuery Compression
+  variable_set('jquery_update_compression_type', 'min');
+}

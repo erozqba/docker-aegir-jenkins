@@ -3,11 +3,11 @@
   <parent>
     <groupId>org.jenkins-ci.plugins</groupId>
     <artifactId>plugin</artifactId>
-    <version>1.495</version>
+    <version>1.577</version>
   </parent>
   <artifactId>mailer</artifactId>
   <packaging>hpi</packaging>
-  <version>1.11</version>
+  <version>1.15</version>
   <name>Jenkins Mailer Plugin</name>
   <url>http://wiki.jenkins-ci.org/display/JENKINS/Mailer</url>
   <licenses>
@@ -31,6 +31,12 @@
     <dependency>
       <groupId>javax.mail</groupId>
       <artifactId>mail</artifactId>
+      <version>1.4</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jenkins-ci.modules</groupId>
+      <artifactId>instance-identity</artifactId>
       <version>1.4</version>
       <scope>provided</scope>
     </dependency>
@@ -74,7 +80,7 @@
   <scm>
     <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
     <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-    <tag>mailer-1.11</tag>
+    <tag>mailer-1.15</tag>
   </scm>
   <repositories>
     <repository>

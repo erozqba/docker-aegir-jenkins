@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<build>
+  <actions>
+    <hudson.model.CauseAction>
+      <causes>
+        <hudson.model.Cause_-UserIdCause/>
+      </causes>
+    </hudson.model.CauseAction>
+    <hudson.plugins.git.util.BuildData plugin="git@2.4.0">
+      <buildsByBranchName/>
+      <remoteUrls>
+        <string>git@gitlab.savoirfairelinux.com:paris-dauphine/dauphine-espace-etudiant.git</string>
+      </remoteUrls>
+    </hudson.plugins.git.util.BuildData>
+  </actions>
+  <queueId>1</queueId>
+  <timestamp>1441403140337</timestamp>
+  <startTime>1441403140343</startTime>
+  <result>FAILURE</result>
+  <duration>965</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <builtOn></builtOn>
+  <workspace>/var/jenkins_home/workspace/tests</workspace>
+  <hudsonVersion>1.609.3</hudsonVersion>
+  <scm class="hudson.scm.NullChangeLogParser"/>
+  <culprits class="com.google.common.collect.EmptyImmutableSortedSet"/>
+</build>

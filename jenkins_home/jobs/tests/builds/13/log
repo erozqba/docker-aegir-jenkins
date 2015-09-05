@@ -1,0 +1,40 @@
+Started by user [8mha:AAAAlh+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzOEgYu/dLi1CL9vNKcHACFIKlWvwAAAA==[0manonymous
+Building remotely on [8mha:AAAAmx+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzWEgZ+/eT83ILSktQi/cTU9MwiAMqlK+vEAAAA[0maegir in workspace /home/jenkins/workspace/tests
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url git@github.com:philippemouchel/fromages.git # timeout=10
+Fetching upstream changes from git@github.com:philippemouchel/fromages.git
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress git@github.com:philippemouchel/fromages.git +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse origin/7.x^{commit} # timeout=10
+Checking out Revision fd8ff46bf3b0b5812df4194931d730f58bf67846 (origin/7.x)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f fd8ff46bf3b0b5812df4194931d730f58bf67846
+First time build. Skipping changelog.
+[tests] $ /bin/sh -xe /tmp/hudson7845585870868957899.sh
++ set -x
++ set -e
++ test -e /home/jenkins/workspace/tests/build
++ rm -rf /home/jenkins/workspace/tests/build/*.tar.gz
++ cd /home/jenkins/workspace/tests
++ echo Reading Jenkins database config....
+Reading Jenkins database config....
++ [ -r /home/jenkins/workspace/tests/.drush-deploy.rc ]
++ echo Reading database config....
+Reading database config....
++ . /home/jenkins/workspace/tests/.drush-deploy.rc
++ DB_USER=jean
++ DB_PASS=quin
++ test -e /home/jenkins/workspace/tests/src/drupal
++ test -e /home/jenkins/workspace/tests/dauph-profile
++ git clone git@github.com:philippemouchel/reblochon.git
+Cloning into 'reblochon'...
++ drush make --translations=fr /home/jenkins/workspace/tests/reblochon/build/build-reblochon.make src/drupal --contrib-destination=profiles/reblochon
+file_get_contents(/home/jenkins/workspace/tests/reblochon/build/build-reblochon.make):  [warning]
+failed to open stream: No such file or directory
+make.utilities.inc:471
+Invalid or empty make file:                                              [error]
+/home/jenkins/workspace/tests/reblochon/build/build-reblochon.make
+Build step 'Execute shell' marked build as failure
+Archiving artifacts
+Finished: FAILURE

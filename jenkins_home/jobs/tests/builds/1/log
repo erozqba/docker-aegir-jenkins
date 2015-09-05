@@ -1,0 +1,35 @@
+Started by user [8mha:AAAAlh+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzOEgYu/dLi1CL9vNKcHACFIKlWvwAAAA==[0manonymous
+Building on master in workspace /var/jenkins_home/workspace/tests
+Cloning the remote Git repository
+Cloning repository git@gitlab.savoirfairelinux.com:paris-dauphine/dauphine-espace-etudiant.git
+ > git init /var/jenkins_home/workspace/tests # timeout=10
+Fetching upstream changes from git@gitlab.savoirfairelinux.com:paris-dauphine/dauphine-espace-etudiant.git
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress git@gitlab.savoirfairelinux.com:paris-dauphine/dauphine-espace-etudiant.git +refs/heads/*:refs/remotes/origin/*
+ERROR: Error cloning remote repo 'origin'
+[8mha:AAAAWB+LCAAAAAAAAP9b85aBtbiIQSmjNKU4P08vOT+vOD8nVc8DzHWtSE4tKMnMz/PLL0ldFVf2c+b/lb5MDAwVRQxSaBqcITRIIQMEMIIUFgAAckCEiWAAAAA=[0mhudson.plugins.git.GitException: Command "git -c core.askpass=true fetch --tags --progress git@gitlab.savoirfairelinux.com:paris-dauphine/dauphine-espace-etudiant.git +refs/heads/*:refs/remotes/origin/*" returned status code 128:
+stdout: 
+stderr: Host key verification failed.
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandIn(CliGitAPIImpl.java:1640)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.launchCommandWithCredentials(CliGitAPIImpl.java:1388)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl.access$300(CliGitAPIImpl.java:62)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl$1.execute(CliGitAPIImpl.java:313)
+	at org.jenkinsci.plugins.gitclient.CliGitAPIImpl$2.execute(CliGitAPIImpl.java:505)
+	at hudson.plugins.git.GitSCM.retrieveChanges(GitSCM.java:1003)
+	at hudson.plugins.git.GitSCM.checkout(GitSCM.java:1043)
+	at hudson.scm.SCM.checkout(SCM.java:484)
+	at hudson.model.AbstractProject.checkout(AbstractProject.java:1274)
+	at hudson.model.AbstractBuild$AbstractBuildExecution.defaultCheckout(AbstractBuild.java:609)
+	at jenkins.scm.SCMCheckoutStrategy.checkout(SCMCheckoutStrategy.java:86)
+	at hudson.model.AbstractBuild$AbstractBuildExecution.run(AbstractBuild.java:531)
+	at hudson.model.Run.execute(Run.java:1738)
+	at hudson.model.FreeStyleBuild.run(FreeStyleBuild.java:43)
+	at hudson.model.ResourceController.execute(ResourceController.java:98)
+	at hudson.model.Executor.run(Executor.java:381)
+ERROR: null
+[8mha:AAAAWB+LCAAAAAAAAP9b85aBtbiIQSmjNKU4P08vOT+vOD8nVc8DzHWtSE4tKMnMz/PLL0ldFVf2c+b/lb5MDAwVRQxSaBqcITRIIQMEMIIUFgAAckCEiWAAAAA=[0mFinished: FAILURE

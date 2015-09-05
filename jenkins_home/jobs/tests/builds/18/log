@@ -1,0 +1,79 @@
+Started by user [8mha:AAAAlh+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzOEgYu/dLi1CL9vNKcHACFIKlWvwAAAA==[0manonymous
+Building remotely on [8mha:AAAAmx+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzWEgZ+/eT83ILSktQi/cTU9MwiAMqlK+vEAAAA[0maegir in workspace /home/jenkins/workspace/tests
+ > git rev-parse --is-inside-work-tree # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url git@github.com:philippemouchel/fromages.git # timeout=10
+Fetching upstream changes from git@github.com:philippemouchel/fromages.git
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress git@github.com:philippemouchel/fromages.git +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse origin/master^{commit} # timeout=10
+Checking out Revision 02e4d75e265b7710edaa931829077e8ff18b9fa8 (origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 02e4d75e265b7710edaa931829077e8ff18b9fa8
+First time build. Skipping changelog.
+[tests] $ /bin/sh -xe /tmp/hudson140503020762923220.sh
++ set -x
++ set -e
++ test -e /home/jenkins/workspace/tests/build
++ rm -rf /home/jenkins/workspace/tests/build/*.tar.gz
++ cd /home/jenkins/workspace/tests
++ echo Reading Jenkins database config....
+Reading Jenkins database config....
++ [ -r /home/jenkins/workspace/tests/.drush-deploy.rc ]
++ echo Reading database config....
+Reading database config....
++ . /home/jenkins/workspace/tests/.drush-deploy.rc
++ DB_USER=jean
++ DB_PASS=quin
++ test -e /home/jenkins/workspace/tests/src/drupal
++ test -e /home/jenkins/workspace/tests/reblochon
++ rm -rf /home/jenkins/workspace/tests/reblochon
++ git clone git@github.com:philippemouchel/reblochon.git
+Cloning into 'reblochon'...
++ drush make --translations=fr /home/jenkins/workspace/tests/build/fromages.make src/drupal --contrib-destination=profiles/reblochon
+Beginning to build /home/jenkins/workspace/tests/build/fromages.make.       [ok]
+drupal-7.38 downloaded.                                                     [ok]
+All translations downloaded for drupal                                      [ok]
+reblochon cloned from git@github.com:philippemouchel/reblochon.git.         [ok]
+Checked out branch 7.x.                                                     [ok]
+Unable to download translations for reblochon: fr                      [warning]
+Found makefile: drupal-org.make                                             [ok]
+Project admin_menu contains 3 modules: admin_devel, admin_menu_toolbar, admin_menu.
+admin_menu-7.x-3.0-rc5 downloaded.                                          [ok]
+All translations downloaded for admin_menu                                  [ok]
+Project adminimal_admin_menu contains 2 modules: adminimal, adminimal_admin_menu.
+adminimal_admin_menu-7.x-1.6 downloaded.                                    [ok]
+All translations downloaded for adminimal_admin_menu                        [ok]
+ckeditor-7.x-1.16 downloaded.                                               [ok]
+All translations downloaded for ckeditor                                    [ok]
+Project ctools contains 10 modules: page_manager, term_depth, ctools_custom_content, ctools_plugin_example, ctools_ajax_sample, ctools_access_ruleset, bulk_export, views_content, stylizer, ctools.
+ctools-7.x-1.7 downloaded.                                                  [ok]
+All translations downloaded for ctools                                      [ok]
+Project date contains 11 modules: date_context, date_tools, date_repeat_field, date_api, date_repeat, date_popup, date_all_day, date_migrate_example, date_migrate, date_views, date.
+date-7.x-2.8 downloaded.                                                    [ok]
+All translations downloaded for date                                        [ok]
+Project devel contains 3 modules: devel_generate, devel, devel_node_access.
+devel-7.x-1.5 downloaded.                                                   [ok]
+All translations downloaded for devel                                       [ok]
+diff-7.x-3.2 downloaded.                                                    [ok]
+All translations downloaded for diff                                        [ok]
+email-7.x-1.3 downloaded.                                                   [ok]
+All translations downloaded for email                                       [ok]
+Project entity contains 2 modules: entity, entity_token.
+entity-7.x-1.6 downloaded.                                                  [ok]
+All translations downloaded for entity                                      [ok]
+Project entityreference contains 2 modules: entityreference_behavior_example, entityreference.
+entityreference-7.x-1.1 downloaded.                                         [ok]
+All translations downloaded for entityreference                             [ok]
+features-7.x-2.5 downloaded.                                                [ok]
+All translations downloaded for features                                    [ok]
+features_orphans-7.x-1.2 downloaded.                                        [ok]
+All translations downloaded for features_orphans                            [ok]
+field_group-7.x-1.4 downloaded.                                             [ok]
+All translations downloaded for field_group                                 [ok]
+honeypot-7.x-1.19 downloaded.                                               [ok]
+All translations downloaded for honeypot                                    [ok]
+Build was aborted
+Aborted by [8mha:AAAAmx+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzOEgZ+/dLi1CL9xLz8vMrc/NJiAJjzDjjEAAAA[0manonymous
+Archiving artifacts
+Finished: ABORTED
