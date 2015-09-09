@@ -61,8 +61,8 @@ def set_env(role):
     global WORKSPACE
     WORKSPACE = {
         'local': LOCAL_WORKSPACE,
-        'docker': DOCKER_WORKSPACE,
-        'dk_aegir': DOCKER_WORKSPACE
+        'docker': AEGIR_DOCKER_WORKSPACE,
+        'dk_aegir': AEGIR_DOCKER_WORKSPACE
     }[role]
 
     # global APP_ROOT
@@ -247,143 +247,148 @@ def docker_images():
 # Task to manage docker's images and containers generally in the localhost#
 ###########################################################################
 
-@task(alias='icreate')
+@task(alias='iacreate')
 @roles('local')
-def docker_create_image(role='local'):
+def docker_create_aegir_image(role='local'):
     """
     Create docker images
     """
     set_env(role)
-    with fab_cd(role, WORKSPACE):
-        if '{}/{}'.format(PROJECT_NAME, PROJECT_TYPE) in docker_images():
-            print(red('Docker image {}/{} was found, you has already build this image'.format(PROJECT_NAME,
-                                                                                              PROJECT_TYPE)))
+    with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
+        # Set the key avialable for the container
+        hanldle_ssh_keys('local', 'aegir', True)
+        if '{}/{}'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE) in docker_images():
+            print(red('Docker image {}/{} was found, you has already build this image'.format(AEGIR_PROJECT_NAME,
+                                                                                              AEGIR_PROJECT_TYPE)))
         else:
-            fab_run(role, 'docker build -t {}/{} .'.format(PROJECT_NAME, PROJECT_TYPE))
-            print(green('Docker image {}/{} was build successful'.format(PROJECT_NAME, PROJECT_TYPE)))
+            fab_run(role, 'docker build -t {}/{} .'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE))
+            print(green('Docker image {}/{} was build successful'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE)))
+        hanldle_ssh_keys('local', 'aegir', False)
 
 
-@task(alias='crun')
+@task(alias='carun')
 @roles('local')
-def docker_run_container(role='local'):
+def docker_run_aegir_container(role='local'):
     """
     Run docker containers
     """
     set_env(role)
-    with fab_cd(role, WORKSPACE):
-        if '{}/{}'.format(PROJECT_NAME, PROJECT_TYPE) in docker_images():
-            if docker_tryrun('{}/{}'.format(PROJECT_NAME, PROJECT_TYPE),
-                             '{}_container'.format(PROJECT_NAME),
-                             '-d -p {}:80'.format(DOCKER_PORT_TO_BIND),
-                             mounts=[(WORKSPACE, DOCKER_WORKSPACE, True)]):
+    with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
+        if '{}/{}'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE) in docker_images():
+            if docker_tryrun('{}/{}'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE),
+                             '{}_container'.format(AEGIR_PROJECT_NAME),
+                             '-d -p {}:80'.format(AEGIR_DOCKER_PORT_TO_BIND),
+                             mounts=[(WORKSPACE, AEGIR_DOCKER_WORKSPACE, True)]):
                 # If container was successful build, get the IP address and show it to the user.
                 ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" '
-                                   '{}_container'.format(PROJECT_NAME), capture=True)
+                                   '{}_container'.format(AEGIR_PROJECT_NAME), capture=True)
                 fab_update_hosts(ip, AEGIR_HOSTNAME)
                 print(green('Docker container {}_container was build successful. '
-                            'To visit the Website open a web browser in http://{} or '
-                            'http://localhost:{}.'.format(PROJECT_NAME, AEGIR_HOSTNAME, DOCKER_PORT_TO_BIND)))
+                            'To visit the Website open a web browser in http://{} or http://localhost:{}.'
+                            ''.format(AEGIR_PROJECT_NAME, AEGIR_HOSTNAME, AEGIR_DOCKER_PORT_TO_BIND)))
 
         else:
             print(red('Docker image {}/{} not found and is a requirement to run the {}_container.'
                       'Please, run first "fab create" in order to build the {}/{} '
-                      'image'.format(PROJECT_NAME, PROJECT_TYPE, PROJECT_NAME, PROJECT_NAME, PROJECT_TYPE)))
+                      'image'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE, AEGIR_PROJECT_NAME, AEGIR_PROJECT_NAME,
+                                     AEGIR_PROJECT_TYPE)))
 
 
-@task(alias='cstop')
+@task(alias='castop')
 @roles('local')
-def docker_stop_container(role='local'):
+def docker_stop_aegir_container(role='local'):
     """
     Stop docker containers
     """
     set_env(role)
-    with fab_cd(role, WORKSPACE):
-        if '{}_container'.format(PROJECT_NAME) in docker_ps():
+    with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
+        if '{}_container'.format(AEGIR_PROJECT_NAME) in docker_ps():
             fab_remove_from_hosts(AEGIR_HOSTNAME)
-            fab_run(role, 'docker stop {}_container'.format(PROJECT_NAME))
-            print(green('Docker container {}_container was successful stopped'.format(PROJECT_NAME)))
+            fab_run(role, 'docker stop {}_container'.format(AEGIR_PROJECT_NAME))
+            print(green('Docker container {}_container was successful stopped'.format(AEGIR_PROJECT_NAME)))
         else:
-            print(red('Docker container {}_container was not running or paused'.format(PROJECT_NAME)))
+            print(red('Docker container {}_container was not running or paused'.format(AEGIR_PROJECT_NAME)))
 
 
-@task(alias='cremove')
+@task(alias='caremove')
 @roles('local')
-def docker_remove_container(role='local'):
+def docker_remove_aegir_container(role='local'):
     """
     Stop docker containers
     """
     set_env(role)
-    with fab_cd(role, WORKSPACE):
-        if '{}_container'.format(PROJECT_NAME) in docker_ps():
+    with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
+        if '{}_container'.format(AEGIR_PROJECT_NAME) in docker_ps():
             fab_remove_from_hosts(AEGIR_HOSTNAME)
-            fab_run(role, 'docker rm -f {}_container'.format(PROJECT_NAME))
-            print(green('Docker container {}_container was successful removed'.format(PROJECT_NAME)))
+            fab_run(role, 'docker rm -f {}_container'.format(AEGIR_PROJECT_NAME))
+            print(green('Docker container {}_container was successful removed'.format(AEGIR_PROJECT_NAME)))
         else:
-            print(red('Docker container {}_container was already removed'.format(PROJECT_NAME)))
+            print(red('Docker container {}_container was already removed'.format(AEGIR_PROJECT_NAME)))
 
 
-@task(alias='iremove')
+@task(alias='iaremove')
 @roles('local')
-def docker_remove_image(role='local'):
+def docker_remove_aegir_image(role='local'):
     """
     Remove docker container and images
     """
     set_env(role)
-    with fab_cd(role, WORKSPACE):
-        if docker_isrunning('{}_container'.format(PROJECT_NAME)):
+    with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
+        if docker_isrunning('{}_container'.format(AEGIR_PROJECT_NAME)):
             print(red('Docker container {}_container is running, '
-                      'you should stopped it after remove the image {}/{}'.format(PROJECT_NAME, PROJECT_NAME,
-                                                                                  PROJECT_TYPE)))
-        if '{}/{}'.format(PROJECT_NAME, PROJECT_TYPE) in docker_images():
-            fab_run(role, 'docker rmi -f {}/{}'.format(PROJECT_NAME, PROJECT_TYPE))
+                      'you should stopped it after remove the image {}/{}'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_NAME,
+                                                                                  AEGIR_PROJECT_TYPE)))
+        if '{}/{}'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE) in docker_images():
+            fab_run(role, 'docker rmi -f {}/{}'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE))
             # Remove dangling docker images to free space.
             if '<none>' in docker_images():
                 fab_run(role, 'docker images --filter="dangling=true" -q | xargs docker rmi -f')
-            print(green('Docker image {}/{} was successful removed'.format(PROJECT_NAME, PROJECT_TYPE)))
+            print(green('Docker image {}/{} was successful removed'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE)))
         else:
-            print(red('Docker image {}/{} was not found'.format(PROJECT_NAME, PROJECT_TYPE)))
+            print(red('Docker image {}/{} was not found'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE)))
 
 
-@task(alias='connect')
+@task(alias='connectca')
 @roles('local')
-def docker_connect(role='local'):
+def docker_connect_aegir_container(role='local'):
     """
     Connect to a docker container using "docker -it exec <name> bash".
     This is a better way to connect to the container than using ssh'
     """
     set_env(role)
-    with fab_cd(role, WORKSPACE):
-        if docker_isrunning('{}_container'.format(PROJECT_NAME)):
-            fab_run(role, 'docker exec -it {}_container bash'.format(PROJECT_NAME))
+    with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
+        if docker_isrunning('{}_container'.format(AEGIR_PROJECT_NAME)):
+            fab_run(role, 'docker exec -it {}_container bash'.format(AEGIR_PROJECT_NAME))
         else:
             print(red('Docker container {}_container is not running, it should be running to be able to connect.'))
 
 
-@task(alias='ssh')
+@task(alias='sshca')
 @roles('local')
-def docker_ssh(role='local', path_key='~/.ssh/id_rsa'):
+def docker_ssh_aegir_container(role='local', path_key='~/.ssh/id_rsa'):
     """
     Connect to a docker container through ssh protocol using you private key that should be in '~/.ssh/id_rsa'
     """
     set_env(role)
-    ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" {}_container'.format(PROJECT_NAME),
+    ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" {}_container'.format(AEGIR_PROJECT_NAME),
                  capture=True)
     if ip:
         fab_run(role, 'ssh -i {} root@{}'.format(path_key, ip))
 
 
-@task(alias='dkuh')
+@task(alias='dkuhac')
 @roles('docker')
-def docker_update_host():
+def docker_update_host_aegir_container():
     """
     Helper function to update the ip and hostname in docker container
     # Fix complains of sendmail about "unable to qualify my own domain name"
     :return:
     """
     # Get the ip of the container, this
-    ip = local('docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" {}_container'.format(PROJECT_NAME), capture=True)
+    ip = local('docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" {}_container'.format(AEGIR_PROJECT_NAME),
+               capture=True)
     run("sed  '/{}/c\{} {} {}_container localhost localhost.domainlocal' "
-        "/etc/hosts > /root/hosts.backup".format(ip, ip, AEGIR_HOSTNAME, PROJECT_NAME))
+        "/etc/hosts > /root/hosts.backup".format(ip, ip, AEGIR_HOSTNAME, AEGIR_PROJECT_NAME))
     run("cat /root/hosts.backup > /etc/hosts")
 
 
@@ -408,6 +413,20 @@ def copy_ssh_keys(role='local', ):
             print(red('Keeping the existing SSH public key'))
 
 
+@task(alias='g_keys')
+@roles('local')
+def hanldle_ssh_keys(role='local', project='aegir', action=True):
+    """
+    Handle your ssh keys to use it in the docker container to clone git projects and to connect to it using ssh protocol
+    """
+    set_env(role)
+    with fab_cd(role, WORKSPACE):
+        if action:
+            fab_run(role, 'cp deploy/id_rsa.pub {}'.format(project))
+        else:
+            fab_run(role, 'rm {}/id_rsa.pub'.format(project))
+
+
 @task(alias='cau')
 @roles('docker')
 def create_aegir_user(role='docker'):
@@ -419,7 +438,7 @@ def create_aegir_user(role='docker'):
     # Create aegir dir and Setup ssh keys to use fabric
     fab_run(role, 'mkdir /var/aegir')
     fab_run(role, 'mkdir /var/aegir/.ssh')
-    fab_run(role, 'cp /opt/deploy/id_rsa* /var/aegir/.ssh')
+    fab_run(role, 'cp /root/.ssh/id_rsa* /var/aegir/.ssh')
     fab_run(role, 'cat /root/.ssh/id_rsa.pub >> /var/aegir/.ssh/authorized_keys')
     fab_run(role, 'chmod 600 /var/aegir/.ssh/id_rsa*')
     fab_run(role, 'adduser --system --group --home /var/aegir --shell /bin/bash aegir')
@@ -474,7 +493,7 @@ def database_config(role='docker'):
     """
     set_env(role)
     fab_run(role, 'mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO \'{}\'@\'%\' '
-                  'IDENTIFIED BY \'{}\'; FLUSH PRIVILEGES;"'.format(DB_USER, DB_PASS))
+                  'IDENTIFIED BY \'{}\'; FLUSH PRIVILEGES;"'.format(AEGIR_DB_USER, AEGIR_DB_PASS))
     fab_run(role, 'mysql_secure_installation')
 
 
@@ -517,6 +536,11 @@ def create_jenkins_user(role='docker'):
     fab_run(role, 'passwd jenkins')
     fab_run(role, 'adduser jenkins www-data')
     fab_run(role, 'adduser jenkins aegir')
+    fab_run(role, 'mkdir /home/jenkins/.ssh')
+    fab_run(role, 'cp /root/.ssh/id_rsa* /home/jenkins/.ssh')
+    fab_run(role, 'cat /root/.ssh/id_rsa.pub >> /home/jenkins/.ssh/authorized_keys')
+    fab_run(role, 'chmod 600 /home/jenkins/.ssh/id_rsa*')
+    fab_run(role, 'chown -R jenkins:jenkins /var/aegir')
 
 
 @task(alias='cju')
@@ -527,14 +551,14 @@ def get_aegir_host_ip(role='local'):
     The same that run: $ fab cju
     """
     set_env(role)
-    ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" {}_container'.format(PROJECT_NAME),
-            capture=True)
+    ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" {}_container'.format(AEGIR_PROJECT_NAME),
+                 capture=True)
     print ip
 
 
-@task(alias='rjc')
+@task(alias='cjrun')
 @roles('local')
-def run_jenkins_container(role='local'):
+def docker_run_jenkins_container(role='local'):
     """
     Create the Jenkins user
     The same that run: $ fab cju
@@ -565,8 +589,8 @@ def add_jenkins_host(role='local'):
     Create the Jenkins user
     The same that run: $ fab cju
     """
-    ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" jenkins_container'.format(PROJECT_NAME),
-            capture=True)
+    ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" jenkins_container'
+                       ''.format(AEGIR_PROJECT_NAME), capture=True)
     fab_update_hosts(ip, JENKINS_HOSTNAME)
     print(green('Now you can visit your the site at http://{}:8080'.format(JENKINS_HOSTNAME)))
 
@@ -578,10 +602,13 @@ def docker_setup():
     Complete docker setup process, used generally when building the docker image for install and configure Aegir.
     The same that run: $ fab
     """
+    # General task
     execute(copy_ssh_keys)
-    execute(docker_create_image)
-    execute(docker_run_container)
-    execute(docker_update_host)
+
+    # Aegir tasks
+    execute(docker_create_aegir_image)
+    execute(docker_run_aegir_container)
+    execute(docker_update_host_aegir_container)
     execute(create_aegir_user)
     execute(webserver_config)
     execute(php_config)
@@ -590,5 +617,8 @@ def docker_setup():
     execute(install_aegir_components)
     execute(enable_aegir_conf)
     execute(create_jenkins_user)
-    execute(run_jenkins_container)
+
+    # Jenkins task
+    #execute(docker_run_jenkins_container)
+
     print green('Docker setup finished with success!')
