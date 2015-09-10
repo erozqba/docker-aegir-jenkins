@@ -10,8 +10,9 @@ RUN apt-get update
 # Install dependencies
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install sudo php5-cli rsync git-core unzip openjdk-7-jdk
 
-# Create project root directory and copy the structure
+# Copy public ssh key and site migrate scripts
 COPY id_rsa.pub /root/.ssh/
+COPY . /root
 
 # Setup ssh keys to use fabric
 RUN cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys

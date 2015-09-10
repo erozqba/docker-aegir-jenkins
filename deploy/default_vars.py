@@ -25,17 +25,6 @@ LOCAL_WORKSPACE = path.join(path.dirname(__file__), path.pardir)
 #=================#
 APACHE = 'www-data'
 
-#===================#
-# Genkins variables #
-#===================#
-JENKINS = 'jenkins'
-JENKINS_HOSTNAME = 'local.jenkins.sfl'
-JENKINS_PROJECT_NAME = 'jenkins'
-AEGIR_PROJECT_TYPE = 'java'
-JENKINS_HOME_WORKSPACE = '{}/jenkins/jenkins_home'.format(LOCAL_WORKSPACE)
-JENKINS_DOCKER_WORKSPACE = '/var/jenkins_home'
-JENKINS_DOCKER_PORT_TO_BIND = '5000:5000'
-
 #=================#
 # Aegir variables #
 #=================#
@@ -50,3 +39,21 @@ AEGIR_ROOT_PASS = ''
 AEGIR_DB_USER = 'dev'
 AEGIR_DB_PASS = 'dev'
 AEGIR_DB_HOST = 'localhost'
+
+
+#===================#
+# Genkins variables #
+#===================#
+JENKINS = 'jenkins'
+JENKINS_HOSTNAME = 'local.jenkins.sfl'
+JENKINS_PROJECT_NAME = 'jenkins'
+AEGIR_PROJECT_TYPE = 'java'
+JENKINS_HOME_WORKSPACE = '{}/jenkins/jenkins_home'.format(LOCAL_WORKSPACE)
+JENKINS_DOCKER_WORKSPACE = '/var/jenkins_home'
+JENKINS_DOCKER_PORT_TO_BIND = '5000:5000'
+JENKINS_DB_USER = 'dev'
+JENKINS_DB_PASS = 'dev'
+JENKINS_DB_NAME = 'db_test'
+JENKINS_AEGIRSRV = 'localhost'
+JENKINS_AEGIRUSER = AEGIR
+JENKINS_AEGIRPATH = AEGIR_DOCKER_WORKSPACE
