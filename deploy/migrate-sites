@@ -3,8 +3,10 @@ ENVIRONMENT=$1
 NEWPLATFORMNAME=$2
 
 PLATFORMNAME="$ENVIRONMENT-demo*"
-i=local.drupalcamp-mtl15.sfl
-if drush site-alias --format=csv --fields=root @${i} | grep -q "platforms/${PLATFORMNAME}" ; then
- echo "######### MIGRATING ${i} #####"
- ./migrate.drush ${i} $NEWPLATFORMNAME
-fi
+
+for i in `'drush site-alias | egrep -v '(^server_|^platform_|^hostmaster|^none|^hm)'`; do
+ if drush site-alias --component=root ${i} | grep -q "platforms/${PLATFORMNAME}" ; then
+   echo "######### MIGRATING ${i} #####"
+   ./migrate.drush ${i} $NEWPLATFORMNAME
+ fi
+done

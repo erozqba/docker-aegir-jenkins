@@ -104,8 +104,6 @@ tar -czf $WORKSPACE/build/$PLATEFORM.tar.gz .
 
 ##########################################################################################################
 
-# Uncomment the following line to force a successful build
-# exit 0
 
 # Prepare test behat
 cd $WORKSPACE
@@ -113,15 +111,10 @@ cp $WORKSPACE/tests/behat/example.behat.yml $WORKSPACE/tests/behat/behat.yml
 sed -i &quot;s@%DRUPAL_ROOT@`pwd`/src/drupal@g&quot; $WORKSPACE/tests/behat/behat.yml
 sed -i &quot;s@%URL@http://local.indus.sfl@g&quot; $WORKSPACE/tests/behat/behat.yml
 
-# We need to create an empty DB for drupal using our test user account
-#mysqladmin -u${DB_USER} -p${DB_PASS} create ${DB_NAME}
-
+# Install the site
 cd $WORKSPACE/src/drupal
 drush si --yes  --db-url=&quot;mysql://$DB_USER:$DB_PASS@localhost/$DB_NAME&quot; --site-name=&quot;Drupal Camp MTL 2015&quot; indus_profile --account-name=admin --account-pass=admin --clean-url=1
 chmod a+w $WORKSPACE/src/drupal/sites/default/files
-
-# Enable Espace Étudiant
-drush en indus_core -y
 
 # Revert features
 drush fra -y
@@ -131,32 +124,6 @@ drush cc all
 
 drush status
 
-# Test section
-#mkdir -p ${WORKSPACE}/logs/behat
-#cd ${WORKSPACE}/tests/behat
-#bin/behat --format pretty --tags &quot;~@wip&amp;&amp;~@disabled&amp;&amp;~@local&quot; --colorscd $WORKSPACE
-#cp $WORKSPACE/tests/behat/example.behat.yml $WORKSPACE/tests/behat/behat.yml
-#sed -i &quot;s@%DRUPAL_ROOT@`pwd`/src/drupal@g&quot; $WORKSPACE/tests/behat/behat.yml
-#sed -i &quot;s@%URL@http://${LOCALHOSTNAME}@g&quot; $WORKSPACE/tests/behat/behat.yml
-
-# We need to create an empty DB for drupal using our test user account
-#mysqladmin -f -u${DB_USER} -p${DB_PASS} drop ${DB_NAME}
-#mysqladmin -u${DB_USER} -p${DB_PASS} create ${DB_NAME}
-
-cd $WORKSPACE/src/drupal
-drush si --yes  --db-url=&quot;mysql://$DB_USER:$DB_PASS@localhost/$DB_NAME&quot; --site-name=&quot;Drupal Camp MTL 2015&quot; indus_profile --account-name=admin --account-pass=admin --clean-url=1
-chmod a+w $WORKSPACE/src/drupal/sites/default/files
-
-# Enable Espace Étudiant
-drush en epoisses -y
-
-# Revert features
-drush fra -y
-
-# Clear cache
-drush cc all
-
-drush status
 
 # Test section
 mkdir -p ${WORKSPACE}/logs/behat
