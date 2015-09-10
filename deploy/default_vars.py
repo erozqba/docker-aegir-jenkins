@@ -30,6 +30,11 @@ APACHE = 'www-data'
 #===================#
 JENKINS = 'jenkins'
 JENKINS_HOSTNAME = 'local.jenkins.sfl'
+JENKINS_PROJECT_NAME = 'jenkins'
+AEGIR_PROJECT_TYPE = 'java'
+JENKINS_HOME_WORKSPACE = '{}/jenkins/jenkins_home'.format(LOCAL_WORKSPACE)
+JENKINS_DOCKER_WORKSPACE = '/var/jenkins_home'
+JENKINS_DOCKER_PORT_TO_BIND = '5000:5000'
 
 #=================#
 # Aegir variables #
@@ -38,8 +43,9 @@ AEGIR = 'aegir'
 AEGIR_HOSTNAME = 'local.aegir.sfl'
 AEGIR_PROJECT_NAME = 'aegir'
 AEGIR_PROJECT_TYPE = 'drupal'
-AEGIR_DOCKER_WORKSPACE = "/opt/"
-AEGIR_DOCKER_PORT_TO_BIND = 8431
+#AEGIR_HOME_WORKSPACE = '{}/aegir/aegir_home'.format(LOCAL_WORKSPACE)
+AEGIR_DOCKER_WORKSPACE = "/var/aegir"
+AEGIR_DOCKER_PORT_TO_BIND = '8431:80'
 AEGIR_ROOT_PASS = ''
 AEGIR_DB_USER = 'dev'
 AEGIR_DB_PASS = 'dev'

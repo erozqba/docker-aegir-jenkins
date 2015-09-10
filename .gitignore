@@ -1,3 +1,8 @@
 deploy/id_rsa*
 deploy/*.pyc
 .idea
+
+
+# Ignore jenkins test jobs
+jenkins/jenkins_home/jobs/tests/*
+

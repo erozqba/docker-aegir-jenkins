@@ -45,12 +45,6 @@ env.roledefs['local'] = ["{}@{}".format(user_name, host_name)]
 env.roledefs['docker'] = ["root@{}".format(AEGIR_HOSTNAME)]
 env.roledefs['dk_aegir'] = ["aegir@{}".format(AEGIR_HOSTNAME)]
 
-# Flag to use for install the site with or without translations
-LOCALE = False
-
-# The CONTAINER_IP will be set at the creation of the container, see @task docker_run_container
-CONTAINER_IP = None
-
 
 def set_env(role):
     """
@@ -64,18 +58,6 @@ def set_env(role):
         'docker': AEGIR_DOCKER_WORKSPACE,
         'dk_aegir': AEGIR_DOCKER_WORKSPACE
     }[role]
-
-    # global APP_ROOT
-    # APP_ROOT = {
-    #     'local': LOCAL_APP_ROOT,
-    #     'docker': DOCKER_APP_ROOT
-    # }[role]
-
-    global DOCKER_IFACE_IP
-    DOCKER_IFACE_IP = None
-    if CONTAINER_IP:
-        DOCKER_IFACE_IP = [(s.connect((CONTAINER_IP, 80)), s.getsockname()[0], s.close())
-                           for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]
 
 
 def fab_run(role="local", cmd="", capture=False):
@@ -251,7 +233,7 @@ def docker_images():
 @roles('local')
 def docker_create_aegir_image(role='local'):
     """
-    Create docker images
+    Create docker aegir image. The same that run: $ fab iacreate
     """
     set_env(role)
     with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
@@ -270,15 +252,16 @@ def docker_create_aegir_image(role='local'):
 @roles('local')
 def docker_run_aegir_container(role='local'):
     """
-    Run docker containers
+    Run docker aegir container. The same that run: $ fab carun
     """
     set_env(role)
     with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
+        #fab_run(role, 'sudo chmod -R 777 {}'.format(AEGIR_HOME_WORKSPACE))
         if '{}/{}'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE) in docker_images():
             if docker_tryrun('{}/{}'.format(AEGIR_PROJECT_NAME, AEGIR_PROJECT_TYPE),
                              '{}_container'.format(AEGIR_PROJECT_NAME),
-                             '-d -p {}:80'.format(AEGIR_DOCKER_PORT_TO_BIND),
-                             mounts=[(WORKSPACE, AEGIR_DOCKER_WORKSPACE, True)]):
+                             '-d -p {}'.format(AEGIR_DOCKER_PORT_TO_BIND) ):
+                             #,mounts=[(AEGIR_HOME_WORKSPACE, AEGIR_DOCKER_WORKSPACE, True)]):
                 # If container was successful build, get the IP address and show it to the user.
                 ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" '
                                    '{}_container'.format(AEGIR_PROJECT_NAME), capture=True)
@@ -298,7 +281,7 @@ def docker_run_aegir_container(role='local'):
 @roles('local')
 def docker_stop_aegir_container(role='local'):
     """
-    Stop docker containers
+    Stop docker aegir container. The same that run: $ fab castop
     """
     set_env(role)
     with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
@@ -314,7 +297,7 @@ def docker_stop_aegir_container(role='local'):
 @roles('local')
 def docker_remove_aegir_container(role='local'):
     """
-    Stop docker containers
+    Remove docker aegir container. The same that run: $ fab caremove
     """
     set_env(role)
     with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
@@ -330,7 +313,7 @@ def docker_remove_aegir_container(role='local'):
 @roles('local')
 def docker_remove_aegir_image(role='local'):
     """
-    Remove docker container and images
+    Remove docker aegir image. The same that run: $ fab iaremove
     """
     set_env(role)
     with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
@@ -352,8 +335,7 @@ def docker_remove_aegir_image(role='local'):
 @roles('local')
 def docker_connect_aegir_container(role='local'):
     """
-    Connect to a docker container using "docker -it exec <name> bash".
-    This is a better way to connect to the container than using ssh'
+    Connect to docker aegir container using "docker -it exec <name> bash". The same that run: $ fab connectca
     """
     set_env(role)
     with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
@@ -367,7 +349,7 @@ def docker_connect_aegir_container(role='local'):
 @roles('local')
 def docker_ssh_aegir_container(role='local', path_key='~/.ssh/id_rsa'):
     """
-    Connect to a docker container through ssh protocol using you private key that should be in '~/.ssh/id_rsa'
+    Connect to docker aegir container through ssh protocol using you private key that should be in '~/.ssh/id_rsa'.The same that run: $ fab sshca
     """
     set_env(role)
     ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" {}_container'.format(AEGIR_PROJECT_NAME),
@@ -380,9 +362,7 @@ def docker_ssh_aegir_container(role='local', path_key='~/.ssh/id_rsa'):
 @roles('docker')
 def docker_update_host_aegir_container():
     """
-    Helper function to update the ip and hostname in docker container
-    # Fix complains of sendmail about "unable to qualify my own domain name"
-    :return:
+    Helper function to update the ip and hostname in docker container. The same that run: $ fab dkuhac
     """
     # Get the ip of the container, this
     ip = local('docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" {}_container'.format(AEGIR_PROJECT_NAME),
@@ -392,13 +372,67 @@ def docker_update_host_aegir_container():
     run("cat /root/hosts.backup > /etc/hosts")
 
 
+@task(alias='cjrun')
+@roles('local')
+def docker_run_jenkins_container(role='local'):
+    """
+    Run docker jenkins container. The same that run: $ fab cjrun
+    """
+    set_env(role)
+    # Change permision in jenkins_home dir and run the container using the official image
+    fab_run(role, 'sudo chmod -R 777 {}'.format(JENKINS_HOME_WORKSPACE))
+    fab_run(role, 'docker run -p {} -v {}:{} -h {} --name jenkins_container '
+                  'jenkins'.format(JENKINS_DOCKER_PORT_TO_BIND, JENKINS_HOME_WORKSPACE, JENKINS_DOCKER_WORKSPACE,
+                                   JENKINS_HOSTNAME))
+
+
+@task(alias='sjc')
+@roles('local')
+def docker_stop_jenkins_container(role='local'):
+    """
+    Stop docker jenkins container. The same that run: $ fab sjc
+    """
+    set_env(role)
+    # Create aegir dir and Setup ssh keys to use fabric
+    if docker_isrunning('{}_container'.format(JENKINS_PROJECT_NAME)):
+        fab_run(role, 'docker stop jenkins_container')
+
+
+@task(alias='rjc')
+@roles('local')
+def docker_remove_jenkins_container(role='local'):
+    """
+    Remove docker jenkins container, always stop docker jenkins container first.The same that run: $ fab rjc
+    """
+    set_env(role)
+    if docker_isrunning('{}_container'.format(JENKINS_PROJECT_NAME)):
+        docker_stop_jenkins_container()
+    # Create aegir dir and Setup ssh keys to use fabric
+    fab_run(role, 'docker rm {}_container'.format(JENKINS_PROJECT_NAME))
+
+
+@task(alias='connectca')
+@roles('local')
+def docker_connect_jenkins_container(role='local'):
+    """
+    Connect to docker jenkins container using "docker -it exec <name> bash".The same that run: $ fab connectca
+    """
+    set_env(role)
+    with fab_cd(role, '{}/aegir'.format(WORKSPACE)):
+        if docker_isrunning('{}_container'.format(JENKINS_PROJECT_NAME)):
+            fab_run(role, 'docker exec -it {}_container bash'.format(JENKINS_PROJECT_NAME))
+        else:
+            print(red('Docker container {}_container is not running, it should be running to be able to connect.'))
+
+
 @task(alias='cp_keys')
 @roles('local')
 def copy_ssh_keys(role='local', ):
     """
-    Copy your ssh keys to use it in the docker container to clone git projects and to connect to it using ssh protocol
+    Copy your ssh keys to use it in the docker aegir container to clone git projects and to connect to it using ssh protocol. The same that run: $ fab cp_keys
     """
     set_env(role)
+    fab_run(role, 'sudo chown {}:{} -R {}'.format(user_name, user_name, WORKSPACE))
     copy = True
     if fab_exists(role, '{}/deploy/id_rsa.pub'.format(WORKSPACE)):
         if confirm(red('There is a SSH public key in your deploy directory Say [Y] to keep this key, say [n] to '
@@ -417,7 +451,7 @@ def copy_ssh_keys(role='local', ):
 @roles('local')
 def hanldle_ssh_keys(role='local', project='aegir', action=True):
     """
-    Handle your ssh keys to use it in the docker container to clone git projects and to connect to it using ssh protocol
+    Handle your ssh keys to use it in the docker aegir container to clone git projects and to connect to it using ssh protocol. The same that run: $ fab g_keys
     """
     set_env(role)
     with fab_cd(role, WORKSPACE):
@@ -431,20 +465,18 @@ def hanldle_ssh_keys(role='local', project='aegir', action=True):
 @roles('docker')
 def create_aegir_user(role='docker'):
     """
-    Create the Aegir user
-    The same that run: $ fab cau
+    Create the Aegir user dans docker aegir container. The same that run: $ fab cau
     """
     set_env(role)
     # Create aegir dir and Setup ssh keys to use fabric
-    fab_run(role, 'mkdir /var/aegir')
-    fab_run(role, 'mkdir /var/aegir/.ssh')
-    fab_run(role, 'cp /root/.ssh/id_rsa* /var/aegir/.ssh')
-    fab_run(role, 'cat /root/.ssh/id_rsa.pub >> /var/aegir/.ssh/authorized_keys')
-    fab_run(role, 'chmod 600 /var/aegir/.ssh/id_rsa*')
     fab_run(role, 'adduser --system --group --home /var/aegir --shell /bin/bash aegir')
-    fab_run(role, 'chown -R aegir:aegir /var/aegir')
     fab_run(role, 'passwd aegir')
     fab_run(role, 'adduser aegir www-data')
+    if not fab_exists(role, '/var/aegir/.ssh'):
+        fab_run(role, 'mkdir /var/aegir/.ssh')
+    fab_run(role, 'cp /root/.ssh/id_rsa* /var/aegir/.ssh')
+    fab_run(role, 'cat /root/.ssh/id_rsa.pub >> /var/aegir/.ssh/authorized_keys')
+    fab_run(role, 'chown -R aegir:aegir /var/aegir')
     fab_run(role, 'a2enmod rewrite')
 
 
@@ -452,8 +484,7 @@ def create_aegir_user(role='docker'):
 @roles('docker')
 def webserver_config(role='docker'):
     """
-    Webserver configuration
-    The same that run: $ fab websc
+    Webserver configuration dans docker aegir container. The same that run: $ fab websc
     """
     set_env(role)
     fab_run(role, 'ln -s /var/aegir/config/apache.conf /etc/apache2/conf-available/aegir.conf')
@@ -463,8 +494,7 @@ def webserver_config(role='docker'):
 @roles('docker')
 def php_config(role='docker'):
     """
-    PHP configuration
-    The same that run: $ fab phpc
+    PHP configuration dans docker aegir container. The same that run: $ fab phpc
     """
     set_env(role)
     fab_run(role, 'sudo sed -i "s@memory_limit = 128M@memory_limit = 512M@g" /etc/php5/cli/php.ini')
@@ -475,8 +505,7 @@ def php_config(role='docker'):
 @roles('docker')
 def sudo_config(role='docker'):
     """
-    Sudo configuration
-    The same that run: $ fab sudoc
+    Sudo configuration dans docker aegir container. The same that run: $ fab sudoc
     """
     set_env(role)
     fab_run(role, 'touch /etc/sudoers.d/aegir')
@@ -488,8 +517,7 @@ def sudo_config(role='docker'):
 @roles('docker')
 def database_config(role='docker'):
     """
-    Database configuration
-    The same that run: $ fab dbc
+    Database configuration dans docker aegir container. The same that run: $ fab dbc
     """
     set_env(role)
     fab_run(role, 'mysql -uroot -e "GRANT ALL PRIVILEGES ON *.* TO \'{}\'@\'%\' '
@@ -501,11 +529,9 @@ def database_config(role='docker'):
 @roles('dk_aegir')
 def install_aegir_components(role='dk_aegir'):
     """
-    Install Aegir components
-    The same that run: $ fab iac
+    Install Aegir components dans docker aegir container. The same that run: $ fab iac
     """
     set_env(role)
-    fab_run(role, 'ls')
     fab_run(role, 'drush dl provision-7.x')
     fab_run(role, 'drush cc drush')
     fab_run(role, 'drush hostmaster-install')
@@ -515,20 +541,19 @@ def install_aegir_components(role='dk_aegir'):
 @roles('docker')
 def enable_aegir_conf(role='docker'):
     """
-    Enable Aegir configuration
-    The same that run: $ fab eac
+    Enable Aegir configuration dans docker aegir container. The same that run: $ fab eac
     """
     set_env(role)
     fab_run(role, 'a2enconf aegir')
     fab_run(role, 'service apache2 reload')
+    fab_run(role, 'ln -s /var/aegir /opt/aegir')
 
 
 @task(alias='cju')
 @roles('docker')
 def create_jenkins_user(role='docker'):
     """
-    Create the Jenkins user
-    The same that run: $ fab cju
+    Create the Jenkins user dans docker aegir container. The same that run: $ fab cju
     """
     set_env(role)
     # Create aegir dir and Setup ssh keys to use fabric
@@ -540,15 +565,14 @@ def create_jenkins_user(role='docker'):
     fab_run(role, 'cp /root/.ssh/id_rsa* /home/jenkins/.ssh')
     fab_run(role, 'cat /root/.ssh/id_rsa.pub >> /home/jenkins/.ssh/authorized_keys')
     fab_run(role, 'chmod 600 /home/jenkins/.ssh/id_rsa*')
-    fab_run(role, 'chown -R jenkins:jenkins /var/aegir')
+    fab_run(role, 'chown -R jenkins:jenkins /home/jenkins')
 
 
-@task(alias='cju')
+@task(alias='gahi')
 @roles('local')
 def get_aegir_host_ip(role='local'):
     """
-    Create the Jenkins user
-    The same that run: $ fab cju
+    Show you the IP of the Aegir container in case that you needed. The same that run: $ fab cju
     """
     set_env(role)
     ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" {}_container'.format(AEGIR_PROJECT_NAME),
@@ -556,38 +580,11 @@ def get_aegir_host_ip(role='local'):
     print ip
 
 
-@task(alias='cjrun')
-@roles('local')
-def docker_run_jenkins_container(role='local'):
-    """
-    Create the Jenkins user
-    The same that run: $ fab cju
-    """
-    set_env(role)
-    # Change permision in jenkins_home dir and run the container using the official image
-    fab_run(role, 'sudo chmod -R 777 {}/jenkins_home'.format(WORKSPACE))
-    fab_run(role, 'docker run -p 50000:50000 -v {}/jenkins_home:/var/jenkins_home -h {} --name jenkins_container '
-                  'jenkins'.format(WORKSPACE, JENKINS_HOSTNAME))
-
-
-@task(alias='srjc')
-@roles('local')
-def stop_remove_jenkins_container(role='local'):
-    """
-    Create the Jenkins user
-    The same that run: $ fab cju
-    """
-    set_env(role)
-    # Create aegir dir and Setup ssh keys to use fabric
-    fab_run(role, 'docker stop jenkins_container && docker rm jenkins_container')
-
-
 @task(alias='ajh')
 @roles('local')
 def add_jenkins_host(role='local'):
     """
-    Create the Jenkins user
-    The same that run: $ fab cju
+    Add the IP and hostname of the Jenkins container to your /etc/hosts, so you can use the hostname to visit the site. The same that run: $ fab ajh
     """
     ip = fab_run(role, 'docker inspect -f "{{{{.NetworkSettings.IPAddress}}}}" jenkins_container'
                        ''.format(AEGIR_PROJECT_NAME), capture=True)
@@ -595,12 +592,26 @@ def add_jenkins_host(role='local'):
     print(green('Now you can visit your the site at http://{}:8080'.format(JENKINS_HOSTNAME)))
 
 
+@task(alias='cah')
+@roles('local')
+def clean_aegir_home(role='local'):
+    """
+    Create the Jenkins user dans docker aegir container. The same that run: $ fab cju
+    """
+    set_env(role)
+    #if fab_exists(role, '{}/.ssh'.format(AEGIR_HOME_WORKSPACE)):
+    #    fab_run(role, 'sudo rm -r {}/.ssh'.format(AEGIR_HOME_WORKSPACE))
+    #if fab_exists(role, '{}/.drush'.format(AEGIR_HOME_WORKSPACE)):
+    #    fab_run(role, 'sudo rm -r {}/.drush'.format(AEGIR_HOME_WORKSPACE))
+    #fab_run(role, 'sudo rm -r {}/*'.format(AEGIR_HOME_WORKSPACE))
+
+
+
 @task(alias='ds')
 @runs_once
 def docker_setup():
     """
-    Complete docker setup process, used generally when building the docker image for install and configure Aegir.
-    The same that run: $ fab
+    Complete docker setup process, used generally when building the docker image for install and configure Aegir. The same that run: $ fab ds
     """
     # General task
     execute(copy_ssh_keys)
@@ -619,6 +630,22 @@ def docker_setup():
     execute(create_jenkins_user)
 
     # Jenkins task
-    #execute(docker_run_jenkins_container)
+    execute(docker_run_jenkins_container)
 
     print green('Docker setup finished with success!')
+
+
+@task(alias='dcc')
+@runs_once
+def docker_clean_all():
+    """
+    Complete docker REMOVE process, used generally to remove all containers and images. The same that run: $ fab dcc
+    """
+    execute(docker_stop_jenkins_container)
+    execute(docker_stop_aegir_container)
+    execute(docker_remove_jenkins_container)
+    execute(docker_remove_aegir_container)
+    execute(docker_remove_aegir_image)
+    execute(clean_aegir_home)
+
+    print green('Docker clean all finished with success!')
