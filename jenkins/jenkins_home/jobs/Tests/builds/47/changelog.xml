@@ -1,0 +1,11 @@
+commit 43f3aa3a3e68c210d54011121d0c01f43a4346a0
+tree 30b806339bffbb8bbc74deada935ca7e1a198429
+parent 06d80c0c79535917d2d223768f55d95a9f747960
+author Ernesto Rodriguez Ortiz <erozqba@gmail.com> 2015-09-10 15:34:31 -0400
+committer Ernesto Rodriguez Ortiz <erozqba@gmail.com> 2015-09-10 15:34:31 -0400
+
+    Update basic.feature
+
+
+
+:100644 100644 6ab7b6293e3466a954011439adcbd1215ce245a4 d961c92d9d0073b3c2d7e35282d1b7bd0c738a8a M	tests/behat/features/basic.feature

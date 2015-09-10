@@ -38,7 +38,7 @@
   <concurrentBuild>false</concurrentBuild>
   <builders>
     <hudson.plugins.copyartifact.CopyArtifact plugin="copyartifact@1.35.2">
-      <project>tests</project>
+      <project>Tests</project>
       <filter>build/*.tar.gz</filter>
       <target></target>
       <excludes></excludes>
@@ -48,11 +48,21 @@
     <hudson.tasks.Shell>
       <command>#!/bin/bash
 
+cd $WORKSPACE
+echo &quot;Reading Jenkins database config....&quot; &gt;&amp;2
+if [ -r $WORKSPACE/../.drush-deploy.rc ]; then
+  echo &quot;Reading database config....&quot; &gt;&amp;2
+  . $WORKSPACE/../.drush-deploy.rc
+else
+  echo &quot;Database credentials not found&quot;;
+  exit 1;
+fi
+
 #HASH=${GIT_COMMIT:0:4}
 #PLATFORMNAME=my-${ENVIRONMENT}-7.x-s{$COPYARTIFACT_BUILD_NUMBER_DAUPHIN_TESTS_FONCTIONNELS}-${BUILD_NUMBER}    
-AEGIRSRV=local.aegir.sfl
-AEGIRUSER=aegir
-AEGIRPATH=/var/aegir
+#AEGIRSRV=localhost
+#AEGIRUSER=aegir
+#AEGIRPATH=/var/aegir
 ARTIFACT=`ls $WORKSPACE/build/*.tar.gz`
 BUILDNAME=`basename &quot;$ARTIFACT&quot;`
 PLATFORMNAME=${ENVIRONMENT}-`echo &quot;$BUILDNAME&quot; | cut -d&apos;.&apos; -f1`-${BUILD_NUMBER}
@@ -88,8 +98,7 @@ tar -xvf $WORKSPACE/build/${BUILDNAME} .
 cd $WORKSPACE
 
 echo &quot;Rsync&apos;ing ${PLATFORMNAME} to aegir&quot;
-rsync -a src/drupal/ aegir@localhost:${AEGIRPATH}/platforms/${PLATFORMNAME}
-
+rsync -a src/drupal/ ${AEGIRUSER}@${AEGIRSRV}:${AEGIRPATH}/platforms/${PLATFORMNAME}
 #chown -R aegir:aegir ${AEGIRPATH}/platforms/${PLATFORMNAME}
 
 echo &quot;Declaring ${PLATFORMNAME} in aegir.&quot;
@@ -100,7 +109,7 @@ ssh ${AEGIRUSER}@${AEGIRSRV} &quot;drush @hostmaster hosting-dispatch&quot;
 
 if [ &quot;$migrer_sites&quot; = &quot;true&quot; ]; then
   echo &quot;Migrating all websites currently on ${ENVIRONMENT}-my-* to ${PLATFORMNAME}&quot;
-  ssh ${AEGIRUSER}@${AEGIRSRV} &quot;./migrate-sites ${ENVIRONMENT} ${PLATFORMNAME}&quot;
+  ssh -i ~/.ssh/id_rsa ${AEGIRUSER}@${AEGIRSRV} &quot;./migrate-sites ${ENVIRONMENT} ${PLATFORMNAME}&quot;
 fi
 
 # Clean up copied artifacts

@@ -47,3 +47,39 @@ copy init.groovy.d/tcp-slave-agent-port.groovy to JENKINS_HOME
 --- Copying files at Thu Sep 10 13:41:41 UTC 2015
 /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
  /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 14:30:15 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 15:17:04 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 15:23:56 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 15:56:38 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 16:01:26 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 16:13:12 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 16:32:24 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 16:42:38 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 17:56:14 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 18:07:42 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 18:54:04 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy
+--- Copying files at Thu Sep 10 19:51:23 UTC 2015
+/usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+ /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy -> init.groovy.d/tcp-slave-agent-port.groovy

@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-09-10 17:09:28.991 UTC</timestamp>
+  <original>
+    <name>Tests</name>
+    <number>39</number>
+  </original>
+  <md5sum>1831aa46d308935871f0f819c408ba75</md5sum>
+  <fileName>my-7x--39.tar.gz</fileName>
+  <usages>
+    <entry>
+      <string>Tests</string>
+      <ranges>39</ranges>
+    </entry>
+    <entry>
+      <string>Deploy</string>
+      <ranges>14-18</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>

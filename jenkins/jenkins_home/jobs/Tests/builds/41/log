@@ -1,0 +1,52 @@
+Started by user [8mha:AAAAlh+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzOEgYu/dLi1CL9vNKcHACFIKlWvwAAAA==[0manonymous
+Building remotely on [8mha:AAAAmx+LCAAAAAAAAP9b85aBtbiIQTGjNKU4P08vOT+vOD8nVc83PyU1x6OyILUoJzMv2y+/JJUBAhiZGBgqihhk0NSjKDWzXb3RdlLBUSYGJk8GtpzUvPSSDB8G5tKinBIGIZ+sxLJE/ZzEvHT94JKizLx0a6BxUmjGOUNodHsLgAzWEgZ+/eT83ILSktQi/cTU9MwiAMqlK+vEAAAA[0maegir in workspace /home/jenkins/workspace/Tests
+Cloning the remote Git repository
+Cloning repository https://github.com/sfl-drupal/indus-demo.git
+ > git init /home/jenkins/workspace/Tests # timeout=10
+Fetching upstream changes from https://github.com/sfl-drupal/indus-demo.git
+ > git --version # timeout=10
+ > git -c core.askpass=true fetch --tags --progress https://github.com/sfl-drupal/indus-demo.git +refs/heads/*:refs/remotes/origin/*
+ > git config remote.origin.url https://github.com/sfl-drupal/indus-demo.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/sfl-drupal/indus-demo.git # timeout=10
+Fetching upstream changes from https://github.com/sfl-drupal/indus-demo.git
+ > git -c core.askpass=true fetch --tags --progress https://github.com/sfl-drupal/indus-demo.git +refs/heads/*:refs/remotes/origin/*
+ > git rev-parse origin/master^{commit} # timeout=10
+Checking out Revision e7db3f61f58ef289d7541587dff48069cb267018 (origin/master)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f e7db3f61f58ef289d7541587dff48069cb267018
+ > git rev-list e7db3f61f58ef289d7541587dff48069cb267018 # timeout=10
+[Tests] $ /bin/bash /tmp/hudson2990845445850533057.sh
+/tmp/hudson2990845445850533057.sh: line 12: cd: /home/jenkins/workspace/Tests/src/drupal: No such file or directory
++ set -e
++ test -e /home/jenkins/workspace/Tests/build
++ rm -rf /home/jenkins/workspace/Tests/build/demo-7.x-41.tar.gz
++ cd /home/jenkins/workspace/Tests
++ echo 'Reading Jenkins database config....'
+Reading Jenkins database config....
++ '[' -r /home/jenkins/workspace/Tests/../.drush-deploy.rc ']'
++ echo 'Reading database config....'
+Reading database config....
++ . /home/jenkins/workspace/Tests/../.drush-deploy.rc
+++ DB_USER=dev
+++ DB_PASS=dev
+++ DB_NAME=db_test
+++ AEGIRSRV=localhost
+++ AEGIRUSER=aegir
+++ AEGIRPATH=/var/aegir
++ test -e /home/jenkins/workspace/Tests/src/drupal
++ test -e /home/jenkins/workspace/Tests/indus_profile
++ git clone https://github.com/sfl-drupal/indus-profile.git indus_profile
+Cloning into 'indus_profile'...
++ drush make /home/jenkins/workspace/Tests/indus_profile/build/demo.make src/drupal --contrib-destination=profiles/indus_profile
+Beginning to build                                                          [ok]
+/home/jenkins/workspace/Tests/indus_profile/build/demo.make.
+drupal-7.37 downloaded.                                                     [ok]
+indus_profile cloned from                                                   [ok]
+https://github.com/sfl-drupal/indus-demo.git.
+Unable to check out branch 7.x.                                          [error]
+indus_core cloned from https://github.com/sfl-drupal/indus-core.git.        [ok]
+Checked out branch 7.x.                                                     [ok]
+Build step 'Execute shell' marked build as failure
+Archiving artifacts
+Finished: FAILURE

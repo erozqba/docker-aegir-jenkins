@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fingerprint>
+  <timestamp>2015-09-10 19:52:49.356 UTC</timestamp>
+  <original>
+    <name>Tests</name>
+    <number>49</number>
+  </original>
+  <md5sum>259bbb9ee51813ccd6f1c7637cd43a35</md5sum>
+  <fileName>demo-7x--49.tar.gz</fileName>
+  <usages>
+    <entry>
+      <string>Tests</string>
+      <ranges>49</ranges>
+    </entry>
+    <entry>
+      <string>Deploy</string>
+      <ranges>30-33</ranges>
+    </entry>
+  </usages>
+  <facets/>
+</fingerprint>
