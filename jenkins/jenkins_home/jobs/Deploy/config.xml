@@ -25,6 +25,11 @@
           <description>Cocher cette case pour lancer automatiquement la migration du(des) site(s).</description>
           <defaultValue>true</defaultValue>
         </hudson.model.BooleanParameterDefinition>
+        <hudson.model.BooleanParameterDefinition>
+          <name>delete_old_platform</name>
+          <description>Cocher cette case pour lancer enlever les anciens plateformes automatiquement.</description>
+          <defaultValue>true</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
   </properties>
@@ -109,7 +114,12 @@ ssh ${AEGIRUSER}@${AEGIRSRV} &quot;drush @hostmaster hosting-dispatch&quot;
 
 if [ &quot;$migrer_sites&quot; = &quot;true&quot; ]; then
   echo &quot;Migrating all websites currently on ${ENVIRONMENT}-my-* to ${PLATFORMNAME}&quot;
-  ssh -i ~/.ssh/id_rsa ${AEGIRUSER}@${AEGIRSRV} &quot;./migrate-sites ${ENVIRONMENT} ${PLATFORMNAME}&quot;
+  ssh -i ~/.ssh/id_rsa ${AEGIRUSER}@${AEGIRSRV} &quot;./migrateS.drush ${ENVIRONMENT} ${PLATFORMNAME}&quot;
+fi
+
+if [ &quot;$delete_old_platform&quot; = &quot;true&quot; ]; then
+  echo &quot;Deleting old platform ${ENVIRONMENT}-my-*&quot;
+  ssh -i ~/.ssh/id_rsa ${AEGIRUSER}@${AEGIRSRV} &quot;./deleteP.drush ${ENVIRONMENT} ${PLATFORMNAME}&quot;
 fi
 
 # Clean up copied artifacts
