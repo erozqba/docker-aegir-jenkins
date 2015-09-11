@@ -47,7 +47,6 @@ AEGIR_DB_HOST = 'localhost'
 JENKINS = 'jenkins'
 JENKINS_HOSTNAME = 'local.jenkins.sfl'
 JENKINS_PROJECT_NAME = 'jenkins'
-AEGIR_PROJECT_TYPE = 'java'
 JENKINS_HOME_WORKSPACE = '{}/jenkins/jenkins_home'.format(LOCAL_WORKSPACE)
 JENKINS_DOCKER_WORKSPACE = '/var/jenkins_home'
 JENKINS_DOCKER_PORT_TO_BIND = '5000:5000'

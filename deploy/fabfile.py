@@ -383,9 +383,9 @@ def docker_run_jenkins_container(role='local'):
     set_env(role)
     # Change permision in jenkins_home dir and run the container using the official image
     fab_run(role, 'sudo chmod -R 777 {}'.format(JENKINS_HOME_WORKSPACE))
-    fab_run(role, 'docker run -d -p {} -v {}:{} -h {} --name jenkins_container '
+    fab_run(role, 'docker run -d -p {} -v {}:{} -h {} --name {}_container '
                   'jenkins'.format(JENKINS_DOCKER_PORT_TO_BIND, JENKINS_HOME_WORKSPACE, JENKINS_DOCKER_WORKSPACE,
-                                   JENKINS_HOSTNAME))
+                                   JENKINS_HOSTNAME, JENKINS_PROJECT_NAME))
 
 
 @task(alias='sjc')

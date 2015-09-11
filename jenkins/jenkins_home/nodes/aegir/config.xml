@@ -7,9 +7,9 @@
   <mode>NORMAL</mode>
   <retentionStrategy class="hudson.slaves.RetentionStrategy$Always"/>
   <launcher class="hudson.plugins.sshslaves.SSHLauncher" plugin="ssh-slaves@1.9">
-    <host>172.17.0.9</host>
+    <host>172.17.0.29</host>
     <port>22</port>
-    <credentialsId>1167e31b-a05c-48fe-803f-bfca82181044</credentialsId>
+    <credentialsId>20cd370d-539b-4cde-9b63-5f5a4913f97e</credentialsId>
     <maxNumRetries>0</maxNumRetries>
     <retryWaitTime>0</retryWaitTime>
   </launcher>
